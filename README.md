@@ -1,6 +1,6 @@
 # Brmdoor via libnfc and libfreefare
 
-This is a fork of excellent
+This is a fork of the excellent
 https://github.com/hiviah/brmdoor_libnfc.git . The for reduces the
 code to the nfc and authentification related functions. I.e. integration
 functions used in the Brmlab in Prague are removed. As a side effect
@@ -96,7 +96,7 @@ To build, just run make:
   
         ./brmdoor_adduser.py -c brmdoor_nfc.config -a ndef 04631982cc2280 SomeUserName
   
-  -- you need to generate Ed25519 keypair, store the private key somewhere safe and put the public in config file
+  -- you need to generate Ed25519 keypair, store the private key somewhere safe (to programm more Desfire cards later) and put the public in config file brmdoor_nfc.config
   
         ./generate_ed25519_keypair.py
         
