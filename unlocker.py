@@ -29,32 +29,3 @@ class Unlocker(object):
         pass
 
 
-class UnlockerWiringPi(Unlocker):
-    """Uses configured pings via WiringPi to open lock.
-    """
-
-    def __init__(self, config):
-        import wiringpi
-        Unlocker.__init__(self, config)
-        # PIN numbers follow P1 header BCM GPIO numbering, see https://projects.drogon.net/raspberry-pi/wiringpi/pins/
-        # Local copy of the P1 in repo mapping see gpio_vs_wiringpi_numbering_scheme.png.
-        wiringpi.wiringPiSetupGpio()
-        self.lockPin = self.config.getint("UnlockerWiringPi", "lock_pin")
-        wiringpi.pinMode(self.lockPin, wiringpi.OUTPUT) #output
-    
-    def unlock(self):
-        """Unlocks lock at configured pin by pulling it high.
-        """
-        import wiringpi
-        wiringpi.digitalWrite(self.lockPin, 1)
-        time.sleep(self.lockOpenedSecs)
-        wiringpi.digitalWrite(self.lockPin, 0)
-
-    def lock(self):
-        """
-        Lock the lock back. Meant to be used when program is shut down
-        so that lock is not left disengaged.
-        """
-        import wiringpi
-        wiringpi.digitalWrite(self.lockPin, 0)
-

@@ -1,6 +1,7 @@
 #include <string>
 #include <cassert>
 #include <memory>
+#include <functional>
 
 #include <Python.h>
 

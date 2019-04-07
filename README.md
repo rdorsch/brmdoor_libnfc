@@ -1,13 +1,29 @@
 # Brmdoor via libnfc and libfreefare
 
+This is a fork of excellent
+https://github.com/hiviah/brmdoor_libnfc.git . The for reduces the
+code to the nfc and authentification related functions. I.e. integration
+functions used in the Brmlab in Prague are removed. As a side effect
+there are no dependencies left to code not in Debian buster (upcoming
+Debian 10).
+
+In particular I removed
+
+- wiringPi support on the Raspberry Pi (used for pysically unlocking
+the door and an *OPEN/CLOSE state* button for people to indicate if
+place is opened to public.
+- IRC support to report information to an irc channel
+- SFTP/SpaceAPI support to upload status information to a server
+
+This removes all dependencies to software not included in Debian
+buster
+
+
 This is an access-control system implementation via contactless ISO 14443A cards
 and a PN53x-based reader. So you basically swipe your card, and if it's in
 database, the door unlocks.
 
 Info about authorized users and their cards and keys is stored in sqlite database.
-
-It also supports physical *OPEN/CLOSE state* button for people to indicate if place is opened to public. The state can be reported via IRC topic
-and SFTP upload in [SpaceAPI.net format](http://spaceapi.net/documentation).
 
 This was originally designed for Raspberry (Raspbian), but it also runs on other distros on Rapi and
 x86 if you have the PN532 USB reader.
@@ -45,7 +61,6 @@ You need just to run `make`. Additional dependencies:
 All dependencies can be installed on Ubuntu or Debian/Raspbian via:
 
     apt install libnfc-dev libfreefare-bin libfreefare-dev python-axolotl-curve25519 swig2.0 python-dev
-    pip install irc wiringpi2 pysftp
 
 To build, just run make:
 
@@ -76,14 +91,16 @@ To build, just run make:
         ykpersonalize -2 -ochal-resp -ohmac-sha1 -ohmac-lt64 -oserial-api-visible
         
   - authentication using signed UID as NDEF message on Desfire:
+
+  -- Add user to sqlite database using UID of Defire card
   
         ./brmdoor_adduser.py -c brmdoor_nfc.config -a ndef 04631982cc2280 SomeUserName
   
-  - you need to generate Ed25519 keypair, store the private key somewhere safe and put the public in config file
+  -- you need to generate Ed25519 keypair, store the private key somewhere safe and put the public in config file
   
         ./generate_ed25519_keypair.py
         
-  - you need to program the Desfire card to have the signature
+  -- you need to put the Desfire card on the reader and program the Desfire card to have the signature
        
         ./write_signed_ndef_on_desfire.py private_key_in_hex
         
